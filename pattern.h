@@ -1,6 +1,9 @@
 
 #include <fstream>
+#include <iostream>
 
+#ifndef PATTERN
+#define PATTERN
 
 class Pattern {
 private:
@@ -30,3 +33,5 @@ public:
 	virtual void Print(void);
 	virtual inline int GetID(void);
 };
+
+#endif
