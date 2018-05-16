@@ -1,6 +1,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <stdarg.h>
 
 #ifndef PATTERN
 #define PATTERN
@@ -15,7 +16,7 @@ public:
 	Pattern(int in, int out, int data_id, ...);
 	Pattern(int in, int out, int data_id,
 		double *in_array, double *out_array);
-	Pattern(int in, int out, ifstream &infile);
+	Pattern(int in, int out, std::ifstream &infile);
 	~Pattern(void);
 
 	virtual inline double In(int id);
@@ -25,13 +26,13 @@ public:
 	virtual inline void Set_Out(int id, double value);
 	
 	virtual inline int In_Size(void);
-	virtual inline int Out_size(void);	 
+	virtual inline int Out_Size(void);	 
 	
-	virtual void Save(ofstream& outfile);
-	virtual void Load(ifstream& infile);
+	virtual void Save(std::ofstream& outfile);
+	virtual void Load(std::ifstream& infile);
 	
 	virtual void Print(void);
-	virtual inline int GetID(void);
+	virtual inline int Get_ID(void);
 };
 
 #endif

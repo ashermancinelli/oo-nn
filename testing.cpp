@@ -1,6 +1,10 @@
 #include "pattern.h"
 
 int main() {
-	Pattern p(5, 4);
+	Pattern *a[10];
+	int insize = 5;
+	int outsize = 3;	
+	double value;
+	
 	return 0;	
 }

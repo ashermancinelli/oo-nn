@@ -65,7 +65,7 @@ Constructor 4:
 	from an input file
 */
 
-Pattern::Pattern( int in; int out ifstream &infile ) {
+Pattern::Pattern( int in, int out, std::ifstream &infile ) {
 	in_size = in;
 	out_size = out;
 	infile >> id;
@@ -85,7 +85,7 @@ Pattern::~Pattern(void) {
 }
 
 // gets input pattern array values
-double Pattern:In(int id) {
+double Pattern::In(int id) {
 	return in_set[id];
 };
 
@@ -95,7 +95,7 @@ double Pattern::Out(int id) {
 };
 
 // sets input pattern value
-void Pattern:Set_In(int id, double value) {
+void Pattern::Set_In(int id, double value) {
 	in_set[id] = value;
 };
 
@@ -118,21 +118,22 @@ int Pattern::Out_Size(void) {
 int Pattern::Get_ID(void) { return id; };
 
 // Saves pattern to disk
-void Pattern::Save(ofstream& outfile) {
+void Pattern::Save(std::ofstream& outfile) {
 	outfile << id << "\t";
 	for (int i = 0; i < in_size; i++) 
 		outfile << in_set[i] << "\t";
 
 	for (int i = 0; i < out_size; i++) {
 		outfile << out_set[i];
-		i != out_size-1 ? outfile << "\t";
+		if (i != out_size-1) 
+			outfile << "\t";
 	}
 	
 	outfile << std::endl;
 };
 
 // Loads pattern from disk
-void Pattern::Load(ifstream &infile) {
+void Pattern::Load(std::ifstream &infile) {
 	for ( int i = 0; i < in_size; i++)
 		infile >> in_set[i];
 	

@@ -1,5 +1,5 @@
 test:
-	g++ testing.cpp pattern.cpp -o bin/test
+	g++ -std=c++17 testing.cpp pattern.cpp -o bin/test
 
 git:
 	git add -A
