@@ -19,6 +19,8 @@
 class Base_Node;
 
 //----------------------------------------------------------------------
+// Base Link Declaration
+//----------------------------------------------------------------------
 
 class Base_Link
 {
@@ -63,6 +65,13 @@ public:
 
 
 //----------------------------------------------------------------------
+// End Base Link Declaration
+//----------------------------------------------------------------------
+
+
+//----------------------------------------------------------------------
+// LList Declaration
+//----------------------------------------------------------------------
 
 
 class LList
@@ -94,6 +103,10 @@ public:
 	inline void Prev(void);
 };
 
+
+//----------------------------------------------------------------------
+// End LList Declaration
+//----------------------------------------------------------------------
 
 //----------------------------------------------------------------------
 // Base Link Implementation
@@ -425,6 +438,7 @@ int Base_Node::ticket=-1;
 // Feed Forward Declaration
 //----------------------------------------------------------------------
 
+
 class Feed_Forward_Node : public Base_Node
 {
 protected:
@@ -697,7 +711,34 @@ int LList::Del(Base_Link *element)
 	return Del_Node();
 };
 
+int LList::Del_Node(void)
+{
+	if (curr==NULL) return 0; // if list is empty, do nothing
 
+	delete curr->element;
+
+	if (curr == head)
+	{
+		if (head==tail) tail = NULL;
+		else head->next->prev = NULL;
+		head = curr->next;		
+	}
+	else if (curr == tail)
+	{
+		tail->prev->next = NULL;
+		tail = curr->prev;
+	}
+	else 
+	{
+		curr->next->prev = curr->prev;
+		curr->prev->next = curr->next;
+	}
+
+	delete curr;
+	curr = NULL;
+	count-;
+	return 1;
+}
 
 
 
