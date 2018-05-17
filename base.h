@@ -1,6 +1,5 @@
 
 
-
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -469,6 +468,237 @@ char *Feed_Forward_Node::Get_Name(void)
 //----------------------------------------------------------------------
 // End Feed Forward Node Implementation
 //----------------------------------------------------------------------
+
+
+//----------------------------------------------------------------------
+// Base Network Declaration
+//----------------------------------------------------------------------
+
+class Base_Network : public Base_Node
+{
+protected:
+	int num_nodes;
+	int num_links;
+	Base_Node **node;
+	Base_Link **link;
+	
+	virtual void Create_Network(void);	
+	virtual void Load_Inputs(void);
+	virtual void Save_Nodes_Links(std::ofstream &outfile);
+	virtual void Load_Nodes_Links(std::ifstream &infile);
+
+public:
+	Base_Network(void);
+	~Base_Network(void);
+	virtual void Epoch(int code=0);	
+	virtual void Print(std::ofstream &outfile);
+	virtual char *Get_Name(void);
+}
+
+
+//----------------------------------------------------------------------
+// End Base Network Declaration
+//----------------------------------------------------------------------
+
+
+//----------------------------------------------------------------------
+// Base Network Implementation
+//----------------------------------------------------------------------
+
+void Base_Network::Create_Network(void) {};
+
+void Base_Network::Load_Inputs(void) {};
+
+void Base_Network::Save_Nodes_Links(std::ofstream &outfile)
+{
+	outfile << num_nodes << std::endl;
+	outfile << num_links << std::endl;
+	for (int i = 0; i < num_nodes; i++)
+		node[i]->Save(outfile);
+	for (int i = 0; i < num_links; i++)
+		link[i]->Save(outfile);
+};
+
+void Base_Network::Load_Nodes_Links(std::ifstream &infile)
+{
+	infile >> num_nodes;
+	infile >> num_links;
+	Create_Network();
+	for (int i = 0; i < num_nodes; i++)
+		node[i]->Load(infile);
+	for (int i = 0; i < num_links; i++)
+		link[i]->Load(infile);
+};
+
+Base_Network::Base_Network(void) : Base_Node(0,0)
+{
+	num_nodes = 0; 
+	num_links = 0;
+	node = NULL;
+	link = NULL;
+};
+
+Base_Network::~Base_Network(void)
+{
+	if (node!=NULL)
+	{
+		for (int i = 0; i < num_nodes; i++)
+			delete node[i];
+		for (int i = 0; i < num_links; i++)
+			delete link[i];	
+		delete []node;
+		delete []link;
+	}
+};
+
+void Base_Network::Print(std::ofstream &outfile)
+{
+	for (int i = 0; i < num_nodes; i++)
+		node[i]->Print(outfile);
+};
+
+char *Base_Network::Get_Name(void)
+{
+	static char name[] = "BASE_NETWORK";
+	return name;
+};
+
+void Base_Network::Epoch(int code)
+{
+	for (int i = 0; i < num_nodes; i++)
+		node[i]->Epoch(code);
+	for (int i = 0; i < num_links; i++)
+		link[i]->Epoch(code);
+}
+
+
+//----------------------------------------------------------------------
+// End Base Network Implementation
+//----------------------------------------------------------------------
+
+
+//----------------------------------------------------------------------
+// Linked List Implementation
+//----------------------------------------------------------------------
+
+LList::LList(void) 
+{
+	curr = head = tail = NULL;
+	count = 0;
+};
+
+LList::~LList(void) { Clear(); };
+
+int LList::Count(void) { return count; };
+
+// Clears out all the contents of a list
+void LList::Clear(void)
+{
+	NODE *i = head, *temp;
+	while (i != NULL)
+	{
+		temp = i;
+		i = i->Next();
+		delete temp;
+	}
+	curr = head = tail = NULL;
+	count = 0;
+};
+
+int LList::Add_To_Tail(Base_Link *element)
+{
+	curr = NULL;
+	return Add_Node(element);
+};
+
+// this adds node before the node curr points to. if curr is null
+// then node is added to tail
+int LList::Add_Node(Base_Link *element)
+{
+	NODE *temp = new NODE;
+	if (temp == NULL)
+	{
+		std::cout << "Unable to allocate Node..." << std::endl;
+	}
+	
+	temp->element = element;
+	if (temp == NULL) return 0;
+	
+	// Add to tail of list
+	if (curr == NULL)
+	{
+		temp->prev = tail;
+		temp->next = NULL;
+		// list is empty
+		if (tail == NULL)
+		{
+			head = temp;
+			tail = temp;
+		} 
+		// list is not empty
+		else 
+		{
+			tail->next = temp;
+			tail = temp;
+		}
+	}
+	// Add as head of list
+	else if (curr == head)
+	{
+		temp->prev = NULL;
+		temp->next = head;
+		// empty list
+		if (head == NULL)
+		{
+			head = temp;
+			tail = temp;
+		}
+		// non-empty list
+		else 
+		{
+			head->prev = temp;
+			head = temp;
+		}
+	}
+	// Add to middle of list
+	else
+	{
+		temp->prev=curr->prev;
+		temp->next=curr;
+		curr->prev->next = temp;
+		curr->prev = temp;
+	}
+	count++;
+	return 1;
+};
+
+// function verifies existence of node in list and returns position
+int LList::Find(Base_Link *element)
+{
+	NODE *temp = head;
+	int cnt = 1;
+	curr = NULL;
+	while (temp!=NULL)
+	{
+		if (temp->element == element)
+		{
+			curr = temp;
+			return cnt;	
+		}
+		cnt++;
+		temp = temp->Next();
+	}
+	return 0;
+};
+
+int LList::Del(Base_Link *element)
+{
+	if (!Find(element)) return 0;
+	return Del_Node();
+};
+
+
+
 
 
 
