@@ -81,9 +81,11 @@ private:
 	{
 		NODE *next, *prev;
 		Base_Link *element;
-	}
+	};
 	
-	NODE *head, *tail, *curr;
+	NODE *head;
+	NODE *tail;
+	NODE *curr;
 	int count;
 
 public:	
@@ -132,9 +134,9 @@ void Base_Link::Set_In_Node(Base_Node *node, int id) { in_node = node; };
 
 void Base_Link::Set_Out_Node(Base_Node *node, int id) { out_node = node; };
 
-Base_Node Base_Link::In_Node(void) { return in_node; };
+Base_Node *Base_Link::In_Node(void) { return in_node; };
 
-Base_Node Base_Link::Out_Node(void) { return out_node; };
+Base_Node *Base_Link::Out_Node(void) { return out_node; };
 
 void Base_Link::Save(std::ofstream &outfile) 
 {
@@ -143,7 +145,7 @@ void Base_Link::Save(std::ofstream &outfile)
 	if (value) delete[] value;
 	value = new double[value_size];
 	for (int i = 0; i < value_size; i++)
-		outfile << " " << setprecision(18) << value[i];
+		outfile << " " << std::setprecision(18) << value[i];
 	outfile << std::endl;
 };
 
@@ -316,11 +318,11 @@ void Base_Node::Save(std::ofstream &outfile)
 	outfile << setw(4) << id << std::endl;
 	outfile << value_size;
 	for ( int i = 0; i < value_size; i++ ) 
-		outfile << " " << setprecision(18) << value[i];
+		outfile << " " << std::setprecision(18) << value[i];
 	outfile << std::endl;
 	outfile << error_size;
 	for ( int i = 0; i < error_size; i++ ) 
-		outfile << " " << setprecision(18) << error[i];
+		outfile << " " << std::setprecision(18) << error[i];
 	outfile << std::endl;	
 };
 
@@ -507,7 +509,7 @@ public:
 	virtual void Epoch(int code=0);	
 	virtual void Print(std::ofstream &outfile);
 	virtual char *Get_Name(void);
-}
+};
 
 
 //----------------------------------------------------------------------
@@ -612,7 +614,7 @@ void LList::Clear(void)
 	while (i != NULL)
 	{
 		temp = i;
-		i = i->Next();
+		i = i->next;
 		delete temp;
 	}
 	curr = head = tail = NULL;
@@ -700,7 +702,7 @@ int LList::Find(Base_Link *element)
 			return cnt;	
 		}
 		cnt++;
-		temp = temp->Next();
+		temp = temp->next;
 	}
 	return 0;
 };
@@ -736,11 +738,30 @@ int LList::Del_Node(void)
 
 	delete curr;
 	curr = NULL;
-	count-;
+	count--;
 	return 1;
 }
 
+void LList::Reset_To_Head(void) { curr = head; };
 
+void LList::Reset_To_Tail(void) { curr = tail; };
+
+void LList::Next(void)
+{
+	if (curr->next == NULL) curr = head;
+	else curr = curr->next;
+};
+
+void LList::Prev(void)
+{
+	if (curr->prev == NULL) curr = tail;
+	else curr = curr->prev;
+};
+
+
+//----------------------------------------------------------------------
+// End LList Implementation
+//----------------------------------------------------------------------
 
 
 #endif

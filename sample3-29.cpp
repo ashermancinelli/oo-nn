@@ -5,10 +5,10 @@
 #include <fstream>
 #include <iostream>
 
-#include "lib/base.h"
-#define WEIGHT 0
+#include "base.h"
 
-void main(void) 
+
+int main(void) 
 {
 	Base_Node Node[6];
 	Base_Link Link[8];
