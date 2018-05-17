@@ -1,5 +1,22 @@
-e[i] = 0.0;
-		
+
+
+#include "basenode.h"
+#define NODE_ERROR 0
+#define NODE_VALUE 0
+
+
+Base_Node::Base_Node(int v_size, int e_size)
+{
+	id = ++ticket;
+	if (v_size <= 0) { value_size = 0; value = NULL; }
+	else {
+		value_size = v_size;
+		value = new double[v_size];
+	}
+	
+	for (int i = 0; i < v_size; i++)
+		value[i] = 0.0;
+	
 	if ( e_size <= 0 ) { error_size = 0; error = NULL; }
 	else { 
 		error_size = e_size;
@@ -156,5 +173,5 @@ int Disconnect(Base_Node *from_node, Base_Node *to_node) {
 
 };
 
-double Random(double lower_bound, dobule upper_bound);
+double Random(double lower_bound, double upper_bound);
 

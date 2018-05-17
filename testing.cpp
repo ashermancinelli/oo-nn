@@ -1,4 +1,4 @@
-#include "pattern.h"
+#include "lib/pattern.h"
 
 int main() {
 	Pattern *a[10];
