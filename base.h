@@ -114,6 +114,9 @@ public:
 // Base Link Implementation
 //----------------------------------------------------------------------
 
+
+int Base_Link::Get_Set_Size(void) { return value_size; };
+
 Base_Link::Base_Link(int size)
 {
 	id = ++ticket;
@@ -130,13 +133,6 @@ Base_Link::~Base_Link(void)
 	if (value_size > 0) delete[] value;
 };
 
-void Base_Link::Set_In_Node(Base_Node *node, int id) { in_node = node; };
-
-void Base_Link::Set_Out_Node(Base_Node *node, int id) { out_node = node; };
-
-Base_Node *Base_Link::In_Node(void) { return in_node; };
-
-Base_Node *Base_Link::Out_Node(void) { return out_node; };
 
 void Base_Link::Save(std::ofstream &outfile) 
 {
@@ -159,6 +155,18 @@ void Base_Link::Load(std::ifstream &infile)
 		infile >> value[i];	
 };
 
+double Base_Link::Get_Value(int id) { return value[id]; };
+
+void Base_Link::Set_Value(double new_val, int id) { value[id] = new_val; };
+
+void Base_Link::Set_In_Node(Base_Node *node, int id) { in_node = node; };
+
+void Base_Link::Set_Out_Node(Base_Node *node, int id) { out_node = node; };
+
+Base_Node *Base_Link::In_Node(void) { return in_node; };
+
+Base_Node *Base_Link::Out_Node(void) { return out_node; };
+
 int Base_Link::Get_ID(void) { return id; };
 
 char *Base_Link::Get_Name(void) 
@@ -167,35 +175,13 @@ char *Base_Link::Get_Name(void)
 	return name;
 };
 
-double Base_Link::In_Value(int mode) { return in_node->Get_Value(mode); };
+void Base_Link::Update_Weight(double new_val) { value[WEIGHT] += new_val; };
 
-double Base_Link::Out_Value(int mode) { return out_mode->Get_Value(mode); };
-
-double Base_Link::In_Error(int mode) { return in_node->Get_Error(mode); };
-
-double Base_Link::Out_Error(int mode) { return out_node->Get_Error(mode); };
-
-double Base_Link::Weighted_In_Value(int mode) 
-{
-	return in_node->Get_Value(mode) * value[WEIGHT];
-};
-
-double Base_Link::Weighted_Out_Value(int mode)
-{
-	return out_node->Get_Value(mode) * value[WEIGHT];	
-};
-
-double Base_Link::Weighted_In_Error(int mode) 
-{
-	return in_node->Get_Error(mode) * value[WEIGHT];
-};
-
-double Base_Link::Weighted_Out_Error(int mode)
-{
-	return out_node->Get_Error(mode) * value[WEIGHT];
-};
+void Base_Link::Epoch(int code) {};
 
 int Base_Link::ticket=-1;
+
+
 
 //----------------------------------------------------------------------
 // End Base Link Implementation
@@ -212,12 +198,13 @@ private:
 
 protected:
 	int id;			
-	double value;
+	double *value;
 	int value_size;
-	double value_size;
 	double *error;	
+	int error_size;
 	
-	LList in_links, out_links;
+	LList in_links; 
+	LList out_links;
 
 public:
 	Base_Node(int v_size = 1, int e_size = 1);
@@ -232,7 +219,7 @@ public:
 	inline virtual double Get_Value(int id=NODE_VALUE);	
 	inline virtual void Set_Value(double new_val, int id=NODE_ERROR);
 	inline virtual double Get_Error(int id=NODE_ERROR);
-	inline virtual void Set_Error(double new_val, in id=NODE_ERROR);
+	inline virtual void Set_Error(double new_val, int id=NODE_ERROR);
 	inline int Get_ID(void);
 	inline virtual char *Get_Name(void);
 	void Create_Link_To(Base_Node &to_node, Base_Link *link);
@@ -242,7 +229,7 @@ public:
 	friend void Connect(Base_Node &from_node, Base_Node &to_node, Base_Link &link);
 	friend void Connect(Base_Node *from_node, Base_Node *to_node, Base_Link *link);
 	friend int Disconnect(Base_Node *from_node, Base_Node *to_node);
-	friend double Random(double lower_bound, dobule upper_bound);
+	friend double Random(double lower_bound, double upper_bound);
 };
 
 
@@ -282,21 +269,21 @@ Base_Node::~Base_Node(void)
 {
 	if (value_size > 0) delete[] value;
 	if (error_size > 0) delete[] error;
-}
+};
 
-LList Base_Node::*In_Links(void) {
+LList *Base_Node::In_Links(void) {
 	return &in_links;
 };
 
-LList Base_Node::*Out_Links(void) {
+LList *Base_Node::Out_Links(void) {
 	return &out_links;
 };
 
-void Base_Node::Run(int mode=0) {};
+void Base_Node::Run(int mode) {};
 
-void Base_Node::Learn(int mode=0) {};
+void Base_Node::Learn(int mode) {};
 
-void Base_Node::Epoch(int code=0) {};
+void Base_Node::Epoch(int code) {};
 
 void Base_Node::Load(std::ifstream &infile)
 {
@@ -315,7 +302,7 @@ void Base_Node::Load(std::ifstream &infile)
 
 void Base_Node::Save(std::ofstream &outfile) 
 {
-	outfile << setw(4) << id << std::endl;
+	outfile << std::setw(4) << id << std::endl;
 	outfile << value_size;
 	for ( int i = 0; i < value_size; i++ ) 
 		outfile << " " << std::setprecision(18) << value[i];
@@ -326,13 +313,13 @@ void Base_Node::Save(std::ofstream &outfile)
 	outfile << std::endl;	
 };
 
-double Base_Node::Get_Value(int id=NODE_VALUE) { return value[id]; };
+double Base_Node::Get_Value(int id) { return value[id]; };
 
-void Base_Node::Set_Value(double new_val, int id=NODE_ERROR) { value[id] = new_val; };
+void Base_Node::Set_Value(double new_val, int id) { value[id] = new_val; };
 
-double Base_Node::Get_Error(int id=NODE_ERROR) { return error[id]; };
+double Base_Node::Get_Error(int id) { return error[id]; };
 
-void Base_Node::Set_Error(double new_val, in id=NODE_ERROR) { error[id] = new_val; };
+void Base_Node::Set_Error(double new_val, int id) { error[id] = new_val; };
 
 int Base_Node::Get_ID(void) { return id; };
 
@@ -365,10 +352,10 @@ void Base_Node::Print(std::ofstream &out)
 	in_links.Reset_To_Head();
 	for ( int i = 0; i < in_links.Count(); i++) 
 	{
-		out 	<< "   In Link ID: " < in_links.Curr()->Get_ID()
-			<< " Link Name: " << in_links.Curr()->Get_Name()
-			<< " Source Node: " << in_links.Curr()->In_Node()->Get_ID()
-			<< " Value Set: ";
+		out << "   In Link ID: " << in_links.Curr()->Get_ID();
+		out << " Link Name: " << in_links.Curr()->Get_Name();
+		out << " Source Node: " << in_links.Curr()->In_Node()->Get_ID();
+		out << " Value Set: ";
 		for (int j = 0; j < in_links.Curr()->Get_Set_Size(); j++)
 			out << in_links.Curr()->Get_Value(j) << " ";
 		out << std::endl;
@@ -398,7 +385,7 @@ void Connect(Base_Node &from_node, Base_Node &to_node, Base_Link &link) {
 }
 
 void Connect(Base_Node *from_node, Base_Node *to_node, Base_Link *link) {
-	from_node.Create_Link_To(*to_node, link);
+	from_node->Create_Link_To(*to_node, link);
 }
 
 int Disconnect(Base_Node *from_node, Base_Node *to_node) {
@@ -414,7 +401,7 @@ int Disconnect(Base_Node *from_node, Base_Node *to_node) {
 	}
 
 	if (flag == 1) {	
-		out_links->Curr()->Out_Node()->In_Links->Del(out_links->Curr());	
+		out_links->Curr()->Out_Node()->In_Links()->Del(out_links->Curr());	
 		out_links->Del_Node();
 		return 1;
 	} else {
@@ -429,6 +416,43 @@ double Random(double lower_bound, double upper_bound)
 };
 
 int Base_Node::ticket=-1;
+
+
+//----------------------------------------------------------------
+// These base_link members must be implemented after 
+// the base_node class because they reference specific members of 
+// the base_node class.
+//----------------------------------------------------------------
+
+double Base_Link::In_Value(int mode) { return in_node->Get_Value(mode); };
+
+double Base_Link::Out_Value(int mode) { return out_node->Get_Value(mode); };
+
+double Base_Link::In_Error(int mode) { return in_node->Get_Error(mode); };
+
+double Base_Link::Out_Error(int mode) { return out_node->Get_Error(mode); };
+
+double Base_Link::Weighted_In_Value(int mode) 
+{
+	return in_node->Get_Value(mode) * value[WEIGHT];
+};
+
+double Base_Link::Weighted_Out_Value(int mode)
+{
+	return out_node->Get_Value(mode) * value[WEIGHT];	
+};
+
+double Base_Link::Weighted_In_Error(int mode) 
+{
+	return in_node->Get_Error(mode) * value[WEIGHT];
+};
+
+double Base_Link::Weighted_Out_Error(int mode)
+{
+	return out_node->Get_Error(mode) * value[WEIGHT];
+}
+
+//----------------------------------------------------------------;
 
 
 //----------------------------------------------------------------------
@@ -745,6 +769,12 @@ int LList::Del_Node(void)
 void LList::Reset_To_Head(void) { curr = head; };
 
 void LList::Reset_To_Tail(void) { curr = tail; };
+
+Base_Link *LList::Curr(void)
+{
+	if (curr==NULL) return NULL;
+	else return curr->element;
+}
 
 void LList::Next(void)
 {
