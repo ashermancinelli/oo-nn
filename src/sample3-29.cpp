@@ -5,7 +5,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "base.h"
+#include "../lib/base.h"
 
 
 int main(void) 

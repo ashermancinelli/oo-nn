@@ -1,0 +1,40 @@
+Node ID: 0   Node Name: BASE_LINK
+Value Set: 0 
+Error Set: 0 
+   Out Link ID: 0   Link Name: BASE_LINK   Dest Node: 2   Value Set: 0 
+   Out Link ID: 1   Link Name: BASE_LINK   Dest Node: 3   Value Set: 0 
+
+Node ID: 1   Node Name: BASE_LINK
+Value Set: 0 
+Error Set: 0 
+   Out Link ID: 2   Link Name: BASE_LINK   Dest Node: 2   Value Set: 0 
+   Out Link ID: 3   Link Name: BASE_LINK   Dest Node: 3   Value Set: 0 
+
+Node ID: 2   Node Name: BASE_LINK
+Value Set: 0 
+Error Set: 0 
+   In Link ID: 0 Link Name: BASE_LINK Source Node: 0 Value Set: 0 
+   In Link ID: 2 Link Name: BASE_LINK Source Node: 1 Value Set: 0 
+   Out Link ID: 4   Link Name: BASE_LINK   Dest Node: 4   Value Set: 0 
+   Out Link ID: 5   Link Name: BASE_LINK   Dest Node: 5   Value Set: 0 
+
+Node ID: 3   Node Name: BASE_LINK
+Value Set: 0 
+Error Set: 0 
+   In Link ID: 1 Link Name: BASE_LINK Source Node: 0 Value Set: 0 
+   In Link ID: 3 Link Name: BASE_LINK Source Node: 1 Value Set: 0 
+   Out Link ID: 6   Link Name: BASE_LINK   Dest Node: 4   Value Set: 0 
+   Out Link ID: 7   Link Name: BASE_LINK   Dest Node: 5   Value Set: 0 
+
+Node ID: 4   Node Name: BASE_LINK
+Value Set: 0 
+Error Set: 0 
+   In Link ID: 4 Link Name: BASE_LINK Source Node: 2 Value Set: 0 
+   In Link ID: 6 Link Name: BASE_LINK Source Node: 3 Value Set: 0 
+
+Node ID: 5   Node Name: BASE_LINK
+Value Set: 0 
+Error Set: 0 
+   In Link ID: 5 Link Name: BASE_LINK Source Node: 2 Value Set: 0 
+   In Link ID: 7 Link Name: BASE_LINK Source Node: 3 Value Set: 0 
+
