@@ -5,7 +5,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "../lib/base.h"
+#include "../../lib/base.h"
 
 
 int main(void) 
@@ -21,7 +21,7 @@ int main(void)
 	Connect(Node[3], Node[4], Link[6]);
 	Connect(Node[3], Node[5], Link[7]);
 
-	std::ofstream outfile("output.dta");
+	std::ofstream outfile("src/329/output.dta");
 	
 	for (int i = 0; i < 6; i++)
 		Node[i].Print(outfile);

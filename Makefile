@@ -1,5 +1,5 @@
 329:
-	g++ src/sample3-29.cpp -o bin/329 
+	g++ src/329/main.cpp -o bin/329 
 
 git:
 	git add -A
