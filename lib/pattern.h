@@ -105,6 +105,74 @@ Pattern::~Pattern(void)
 	if (out_set) delete []out_set;
 };
 
+double Pattern::In(int id) { return in_set[id]; };
+
+double Pattern::Out(int id) { return out_set[id]; };
+
+void Pattern::Set_In(int id, double value) { in_set[id] = value; };
+
+void Pattern::Set_Out(int id, double value) { out_set[id] = value; };
+
+int Pattern::In_Size(void) { return in_size; };
+
+int Pattern::Out_Size(void) { return out_size; };
+
+int Pattern::Get_ID(void) { return id; };
+
+void Pattern::Save(std::ofstream outfile)
+{
+	outfile << id << "\t";
+	fori(in_size)
+		outfile << in_set[i] << "\t";
+	
+	fori(out_size)
+	{
+		outfile << out_set[i];
+		if (i != out_size-1) outfile << "\t";
+	}
+	outfile << std::endl;
+};
+
+void Pattern::Load(std::ifstream infile)
+{
+	fori(in_size)
+		infile >> in_set[i];
+	
+	fori(out_size)
+		infile >> out_set[i];
+	
+	char ch;
+	ch = infile.peek();
+	while (ch == '\n' || ch == EOF)
+	{
+		ch = infile.get();
+		if (ch == EOF) break;
+		ch = infile.peek();
+	}	
+};
+
+void Pattern::Print(void) 
+{
+	std::cout << "ID: " << id << "   In: ";
+	fori(in_size)
+		std::cout << in_set[i] << " ";
+	std::cout << "   Out: ";
+	fori(out_size)
+		std::cout << out_set[i] << " ";
+	std::cout << std::endl;
+};
+
+void Pattern::Copy(Pattern &original)
+{
+	int i;
+	if (original.In_Size() == in_size)
+		fori(in_size)
+			in_set[i] = original.In(i);
+	if (original.Out_Size() == out_size)
+		fori(out_size)
+			out_set[i] = original.Out(i);
+};
+
 
 
 
