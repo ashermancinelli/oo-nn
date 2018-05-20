@@ -23,7 +23,7 @@ public:
 
 double ADALINE_Node::Transfer_Function(double value)
 {
-	if (value > 0) return -1.0;
+	if (value < 0) return -1.0;
 	else return 1;
 };
 

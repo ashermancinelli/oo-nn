@@ -57,8 +57,10 @@ public:
 	inline virtual double Weighted_Out_Value(int mode=NODE_VALUE);
 
 	// This was originally `mode=NODE_VALUE`, but that didn't seem right so I changed it
-	inline virtual double Weighted_In_Error(int mode=NODE_ERROR); 
-	inline virtual double Weighted_Out_Error(int mode=NODE_ERROR);
+	// Edit: I changed the values back to the book's values
+
+	inline virtual double Weighted_In_Error(int mode=NODE_VALUE); 
+	inline virtual double Weighted_Out_Error(int mode=NODE_VALUE);
 	inline virtual int Get_Set_Size(void);
 	inline virtual void Epoch(int mode=0);
 };

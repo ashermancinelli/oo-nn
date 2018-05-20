@@ -23,6 +23,7 @@ int main()
 	int i;
 
 	// Loading training set
+	std::cout << "Loading training data:\n";
 	Pattern *data[250];
 	std::ifstream infile("src/adaline/lin2var.train");
 	
@@ -39,9 +40,9 @@ int main()
 	}
 	
 	infile.close();
-	return 0;
 
 	// Create ADALINE Network
+	std::cout << "Creating ADALINE Network:\n";
 	Base_Node *Node[4];
 	Base_Link *Link[3];
 	
@@ -60,6 +61,7 @@ int main()
 	Connect(Node[2], Node[3], Link[2]);
 
 	// Training step
+	std::cout << "Training Network:\n";
 	int iteration = 0;
 	int good = 0;
 
@@ -67,14 +69,17 @@ int main()
 	// network that the network gets correct.
 	// In this case, the acceptable error is 0, 
 	// so this will run until the network gets 
-	// every pattern correct
+	// every pattern correct. The good var is 
+	// reset becasue adjusting weights will 
+	// change performance on other data sets, and adaline 
+	// has to be perfect on every dataset
 	while (good < 250)
 	{
 		good = 0;
 		fori(250)
 		{
 			Node[0]->Set_Value(data[i]->In(0));
-			Node[0]->Set_Value(data[i]->In(1));
+			Node[1]->Set_Value(data[i]->In(1));
 			
 			Node[3]->Run();
 	
@@ -90,6 +95,7 @@ int main()
 	}	
 
 	// Save ADALINE Node weights 
+	std::cout << "Saving ADALINE Node weights:\n";
 	
 	std::ofstream outfile("src/adaline/adaline1.net");
 
@@ -106,6 +112,7 @@ int main()
 		delete Link[i];
 
 	// Create another ADALINE Network
+	std::cout << "Re-creating ADALINE Network:\n";
 	Node[0] = new Input_Node;
 	Node[1] = new Input_Node;
 	Node[2] = new Bias_Node;
@@ -120,6 +127,7 @@ int main()
 	Connect(Node[2], Node[3], Link[2]);
 
 	// Load ADALINE Weights into the network 
+	std::cout << "Loading previous weigts into network:\n";
 	infile.open("src/adaline/adaline1.net");
 	fori(4)
 		Node[i]->Load(infile);
@@ -128,6 +136,10 @@ int main()
 	infile.close();
 	
 	// Run the network reloaded into topography
+	std::cout << "Running the reloaded network:\n";
+
+	int correct = 0;
+
 	fori(250)
 	{
 		Node[0]->Set_Value(data[i]->In(0));
@@ -142,13 +154,17 @@ int main()
 			<< data[i]->In(1) << ")  ADALINE:"
 			<< std::setw(3) << Node[3]->Get_Value() << "  Actual:"
 			<< std::setw(3) << data[i]->Out(0) << std::endl;
+		if (Node[3]->Get_Value() == data[i]->Out(0)) correct++;
 	}
 	
+	std::cout << "ADALINE's score: " << correct << "/250\n";	
+	std::cout << "Cleaning up...\n";
 	fori(4)
 		delete Node[i];
 	fori(3)
 		delete Link[i];
 
+	return 0;
 }
 
 
