@@ -50,7 +50,7 @@ void ADALINE_Node::Learn(int mode)
 	}
 };
 
-char *Get_Name(void)
+char *ADALINE_Node::Get_Name(void)
 {
 	static char name[] = "ADALINE_NODE";
 	return name;
@@ -60,8 +60,8 @@ class ADALINE_Link : public Base_Link
 {
 public:
 	ADALINE_Link(void);
-	virtual void Save( std::ifstream &infile );	
-	virtual void Load( std::ofstream &outfile );
+	virtual void Save( std::ofstream &outfile );	
+	virtual void Load( std::ifstream &infile );
 	virtual char *Get_Name(void);
 };
 
@@ -132,7 +132,7 @@ void ADALINE_Network::Create_Network(void)
 		link[i] = new ADALINE_Link;
 		
 	fori(num_links)
-		Connect(node[i], node[num_nodes-1], linke[i]);
+		Connect(node[i], node[num_nodes-1], link[i]);
 };
 
 void ADALINE_Network::Load_Inputs(void)
@@ -143,7 +143,7 @@ void ADALINE_Network::Load_Inputs(void)
 		in_links.Reset_To_Head();
 		fori(cnt)
 		{
-			Set_Value(in_links.Curr()->In_Value(), i)
+			Set_Value(in_links.Curr()->In_Value(), i);
 			in_links.Next();
 		}
 	}
@@ -184,7 +184,7 @@ double ADALINE_Network::Get_Value(int id)
 };
 
 void ADALINE_Network::Set_Value(double new_val, int id) {
-	node[id] = new_val;
+	node[id]->Set_Value(new_val);
 };
 
 void ADALINE_Network::Set_Value(Pattern* input_pattern) 
@@ -197,7 +197,7 @@ void ADALINE_Network::Set_Value(Pattern* input_pattern)
 void ADALINE_Network::Save(std::ofstream &outfile)
 {
 	outfile << id << std::endl;
-	Save_Node_Links(outfile);
+	Save_Nodes_Links(outfile);
 };
 
 void ADALINE_Network::Load(std::ifstream &infile)

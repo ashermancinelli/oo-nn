@@ -41,7 +41,7 @@ public:
 		static char name[] = "BIAS_NODE";
 		return name;
 	};
-}
+};
 
 
 #endif

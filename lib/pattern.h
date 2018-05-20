@@ -13,7 +13,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <fstream.h>
+#include <fstream>
 #include <stdarg.h>
 
 class Pattern
@@ -35,11 +35,11 @@ public:
 	virtual inline void Set_In(int id, double value);
 	virtual inline void Set_Out(int id, double value);
 	virtual inline int In_Size(void);
-	virtual inline int Out_size(void);
+	virtual inline int Out_Size(void);
 	virtual void Save(std::ofstream &outfile);
 	virtual void Load(std::ifstream &infile); 
 	virtual void Print(void);
-	virtual inline int Get_IF(void);
+	virtual inline int Get_ID(void);
 	virtual void Copy(Pattern &in); 
 };
 
@@ -119,7 +119,7 @@ int Pattern::Out_Size(void) { return out_size; };
 
 int Pattern::Get_ID(void) { return id; };
 
-void Pattern::Save(std::ofstream outfile)
+void Pattern::Save(std::ofstream & outfile)
 {
 	outfile << id << "\t";
 	fori(in_size)
@@ -133,7 +133,7 @@ void Pattern::Save(std::ofstream outfile)
 	outfile << std::endl;
 };
 
-void Pattern::Load(std::ifstream infile)
+void Pattern::Load(std::ifstream & infile)
 {
 	fori(in_size)
 		infile >> in_set[i];
