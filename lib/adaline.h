@@ -103,7 +103,7 @@ protected:
 	double learning_rate;
 
 public:
-	ADALINE_Network(char filename[]);	
+	ADALINE_Network(const char filename[]);	
 	ADALINE_Network(int size);
 	ADALINE_Network(int size, double lr);
 	ADALINE_Network(void);
@@ -149,7 +149,7 @@ void ADALINE_Network::Load_Inputs(void)
 	}
 };
 
-ADALINE_Network::ADALINE_Network( char filename[]) : Base_Network()
+ADALINE_Network::ADALINE_Network( const char filename[]) : Base_Network()
 {
 	std::ifstream infile(filename);
 	Load(infile);
