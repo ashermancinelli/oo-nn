@@ -139,25 +139,27 @@ int main()
 	std::cout << "Running the reloaded network:\n";
 
 	int correct = 0;
+	int total = 0;
 
 	fori(250)
 	{
 		Node[0]->Set_Value(data[i]->In(0));
-		Node[1]->Set_Value(data[i]->In(0));
+		Node[1]->Set_Value(data[i]->In(1));
 		// Node 2 does not need to be set because 
 		// it is a bias node and will always yeild 1
 
 		Node[3]->Run();
 		
-		std::cout << "Pattern: " << std::setw(4) << i << " Input: ("
+		std::cout << "Pattern: " << std::setw(3) << i << " Input: ("
 			<< data[i]->In(0) << ","
 			<< data[i]->In(1) << ")  ADALINE:"
 			<< std::setw(3) << Node[3]->Get_Value() << "  Actual:"
 			<< std::setw(3) << data[i]->Out(0) << std::endl;
 		if (Node[3]->Get_Value() == data[i]->Out(0)) correct++;
+		total++;
 	}
 	
-	std::cout << "ADALINE's score: " << correct << "/250\n";	
+	std::cout << "ADALINE's score: " << correct << "/" << total << std::endl;	
 	std::cout << "Cleaning up...\n";
 	fori(4)
 		delete Node[i];
