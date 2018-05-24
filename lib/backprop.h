@@ -71,7 +71,40 @@ BP_Link::BP_Link(int size)
 	value[DELTA] = 0.0;
 };
 
+void BP_Link::Save(std::ofstream &outfile)
+{
+	outfile << std::setw(4) << id << " " << std::setprecision(18)
+		<< value[WEIGHT] << " " << std::setw(4)
+		<< In_Node()->Get_ID() << " "
+		<< std::setw(4) << Out_Node()->Get_ID() << std::endl;
+};
 
+char *BP_Link::Get_Name(void)
+{
+	static char name[] = "BP_LINK";
+	return name;
+};
+
+void BP_Link::Update_Weight(double new_val)
+{
+	double momentum = Out_Node()->Get_Value(MOMENTUM);
+	value[WEIGHT] += new_val + (momentum * value[DELTA]);
+	// update weight with current change times the momentum, 
+	// and store the previous value for next calculation
+
+	value[DELTA] += new_val;
+};
+
+BP_Output_Node::BP_Output_Node(double lr, double mt, int v_size, int e_size) : BP_Node(v_size, e_size)
+{
+	value[LEARNING_RATE] = lr;
+	value[MOMENTUM] = mt;
+};
+
+double BP_Output_Node::Compute_Error(int mode);
+{
+	return value[NODE_VALUE] * (1.0 - value[NODE_VALUE]) * (error[NODE_ERROR] - value[NODE_VALUE]);
+};
 
 
 
